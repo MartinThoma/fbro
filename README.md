@@ -1,6 +1,6 @@
 # fbro
 
-`fbro` is a file browser for AWS S3.
+`fbro` is an interactive console file browser for AWS S3.
 
 ## Installation
 
