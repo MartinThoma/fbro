@@ -15,8 +15,11 @@ import fbro
 @click.version_option(version=fbro.__version__)
 def entry_point():
     """Browse files on aws."""
-    if platform.system() == "Windows":
-        print(f"fbro uses curses which is not supported by Windows.")
+    if platform.system() in ["Windows", "Java"]:
+        print(
+            f"fbro uses curses which is not supported "
+            f"by your system ({platform.system()})."
+        )
         return
     import fbro.interactive
 
