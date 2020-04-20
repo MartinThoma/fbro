@@ -5,6 +5,7 @@ import platform
 
 # Third party modules
 import click
+from botocore.exceptions import ClientError
 
 # First party modules
 import fbro
@@ -19,4 +20,8 @@ def entry_point():
         return
     import fbro.interactive
 
-    print(fbro.interactive.main())
+    try:
+        print(fbro.interactive.main())
+    except ClientError as e:
+        print(e)
+        print("Potential explanation: Maybe you're not logged in?")
