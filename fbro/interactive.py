@@ -2,11 +2,15 @@
 
 # Core Library modules
 import curses
+import logging
+import sys
 from curses import panel
 from typing import Any, List, Tuple
 
 # First party modules
 from fbro import aws
+
+logger = logging.getLogger(__name__)
 
 WindowType = Any  # curses.window does not work
 
@@ -28,9 +32,9 @@ class Menu:
     def navigate(self, n: int) -> None:
         self.position += n
         if self.position < 0:
-            self.position = 0
-        elif self.position >= len(self.items):
             self.position = len(self.items) - 1
+        elif self.position >= len(self.items):
+            self.position = 0
 
     def display(self):
         self.panel.top()
@@ -41,14 +45,24 @@ class Menu:
             self.window.refresh()
             curses.doupdate()
             self.window.addstr(1, 1, self.title, curses.A_NORMAL)
-            for index, item in enumerate(self.items):
+            items = self.items
+            start = 0
+            # Show long lists:
+            # if (len(self.items) + 2) + 1 >= curses.LINES:
+            #     items = self.items[-(curses.LINES - 3):]
+            #     start = len(self.items) self.position
+            for index, item in enumerate(items, start=start):
                 if index == self.position:
                     mode = curses.A_REVERSE
                 else:
                     mode = curses.A_NORMAL
 
                 msg = f"- {item[0]}"
-                self.window.addstr(2 + index, 1, msg, mode)
+                if (2 + index) + 1 >= curses.LINES:
+                    self.window.addstr(2 + index, 1, "...", mode)
+                    break
+                else:
+                    self.window.addstr(2 + index, 1, msg, mode)
 
             key = self.window.getch()
 
@@ -79,6 +93,9 @@ class MenuLoader:
             (key, MenuLoader(self.screen, self.bucket, prefix=f"{key}").display)
             for key in keys
         ]
+        if len(items) > curses.LINES + 3:
+            # TODO: quick hack for long lists; remove ASAP
+            items = items[-(curses.LINES - 3) :]
         menu = Menu(items, self.screen, title=f"s3://{self.bucket}/{self.prefix}")
         return menu.display()
 
