@@ -39,30 +39,30 @@ class Menu:
     def display(self):
         self.panel.top()
         self.panel.show()
-        self.window.clear()
+
+        page_length = curses.LINES - 3
 
         while True:
+            self.window.clear()
             self.window.refresh()
             curses.doupdate()
             self.window.addstr(1, 1, self.title, curses.A_NORMAL)
-            items = self.items
+
             start = 0
-            # Show long lists:
-            # if (len(self.items) + 2) + 1 >= curses.LINES:
-            #     items = self.items[-(curses.LINES - 3):]
-            #     start = len(self.items) self.position
-            for index, item in enumerate(items, start=start):
+            while start + page_length <= self.position:
+                start += page_length
+            end = start + page_length
+
+            for index, item in enumerate(self.items[start:end], start=start):
                 if index == self.position:
                     mode = curses.A_REVERSE
                 else:
                     mode = curses.A_NORMAL
 
                 msg = f"- {item[0]}"
-                if (2 + index) + 1 >= curses.LINES:
-                    self.window.addstr(2 + index, 1, "...", mode)
-                    break
-                else:
-                    self.window.addstr(2 + index, 1, msg, mode)
+                self.window.addstr(2 + index - start, 1, msg, mode)
+            if len(self.items) > start + page_length:
+                self.window.addstr(curses.LINES - 1, 1, "...", curses.A_NORMAL)
 
             key = self.window.getch()
 
@@ -93,9 +93,6 @@ class MenuLoader:
             (key, MenuLoader(self.screen, self.bucket, prefix=f"{key}").display)
             for key in keys
         ]
-        if len(items) > curses.LINES + 3:
-            # TODO: quick hack for long lists; remove ASAP
-            items = items[-(curses.LINES - 3) :]
         menu = Menu(items, self.screen, title=f"s3://{self.bucket}/{self.prefix}")
         return menu.display()
 
