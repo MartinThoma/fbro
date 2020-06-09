@@ -111,4 +111,11 @@ class AwsApp:
 
 
 def main():
+    try:
+        # Test if there is a working AWS connection
+        aws.get_bucket_names()
+    except Exception as e:
+        print(f"{type(e)}: {e}")
+        print("AWS connection is not working")
+        return ""
     curses.wrapper(AwsApp)
