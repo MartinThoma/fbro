@@ -1,13 +1,25 @@
 -r prod.txt
+black
+coverage
+flake8<4.0.0
+flake8_implicit_str_concat
+flake8-bugbear
+flake8-builtins
+flake8-comprehensions
+flake8-eradicate
+flake8-executable
+flake8-isort
+flake8-pytest-style
+flake8-raise
+flake8-simplify
+flake8-string-format
+lxml
+mypy
+pydocstyle
 pytest
 pytest-cov
-pytest-flake8
-pytest-black
-pydocstyle
-tox
-mypy
-
-# coverage is a transitive requirement, introduced by pytest-cov
-# Due to https://github.com/nedbat/coveragepy/issues/716 it is fixed here
-# coverage<5.0.0
-coverage
+pytest-mccabe
+pytest-timeout
+types-pkg-resources
+types-PyYAML
+types-setuptools
