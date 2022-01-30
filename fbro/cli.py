@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Core Library modules
 import platform
 
@@ -21,6 +19,7 @@ def entry_point():
             f"by your system ({platform.system()})."
         )
         return
+    # First party modules
     import fbro.interactive
 
     try:

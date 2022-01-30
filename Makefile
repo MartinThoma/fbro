@@ -1,3 +1,10 @@
+maint:
+	pip install -r requirements/dev.txt
+	pre-commit autoupdate && pre-commit run --all-files
+	pip-compile -U setup.py
+	pip-compile -U requirements/ci.in
+	pip-compile -U requirements/dev.in
+
 install:
 	pip install -e . --user
 

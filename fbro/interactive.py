@@ -1,9 +1,6 @@
-#!/usr/bin/python
-
 # Core Library modules
 import curses
 import logging
-import sys
 from curses import panel
 from typing import Any, List, Tuple
 
@@ -88,7 +85,7 @@ class MenuLoader:
         self.prefix = prefix
 
     def display(self):
-        keys = [key for key in aws.list_files(self.bucket, prefix=self.prefix)]
+        keys = list(aws.list_files(self.bucket, prefix=self.prefix))
         items = [
             (key, MenuLoader(self.screen, self.bucket, prefix=f"{key}").display)
             for key in keys
