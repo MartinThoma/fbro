@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Core Library modules
 import platform
 
